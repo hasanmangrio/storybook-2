@@ -1,35 +1,35 @@
 :root {
-  /* Warm paper palette */
-  --paper:        oklch(0.965 0.014 78);
-  --paper-deep:   oklch(0.945 0.018 76);
-  --paper-edge:   oklch(0.91 0.022 74);
+  /* Cool, editorial paper palette */
+  --paper:        oklch(0.958 0.007 198);
+  --paper-deep:   oklch(0.938 0.009 198);
+  --paper-edge:   oklch(0.892 0.011 200);
 
-  --ink:          oklch(0.235 0.018 60);
-  --ink-soft:     oklch(0.38 0.020 60);
-  --ink-faint:    oklch(0.58 0.020 65);
-  --ink-ghost:    oklch(0.78 0.018 70);
+  --ink:          oklch(0.210 0.016 235);
+  --ink-soft:     oklch(0.355 0.015 232);
+  --ink-faint:    oklch(0.538 0.013 228);
+  --ink-ghost:    oklch(0.718 0.009 222);
 
-  --accent:       oklch(0.56 0.105 38);
-  --accent-soft:  oklch(0.78 0.060 38);
+  --accent:       oklch(0.418 0.108 152);   /* deep forest green */
+  --accent-soft:  oklch(0.618 0.072 152);
 
-  /* Card tints */
-  --tint-1: oklch(0.965 0.022 78);
-  --tint-2: oklch(0.955 0.026 50);
-  --tint-3: oklch(0.955 0.020 110);
-  --tint-4: oklch(0.955 0.020 165);
-  --tint-5: oklch(0.955 0.018 240);
-  --tint-6: oklch(0.955 0.022 25);
-  --tint-7: oklch(0.95 0.015 90);
-  --tint-8: oklch(0.955 0.018 295);
+  /* Card tints — muted, cool, editorial */
+  --tint-1: oklch(0.956 0.007 198);   /* cool white */
+  --tint-2: oklch(0.946 0.019 162);   /* pale sage */
+  --tint-3: oklch(0.946 0.012 218);   /* pale slate */
+  --tint-4: oklch(0.941 0.024 152);   /* sage green */
+  --tint-5: oklch(0.946 0.014 248);   /* pale steel blue */
+  --tint-6: oklch(0.942 0.011 202);   /* cool steel */
+  --tint-7: oklch(0.950 0.008 212);   /* blue linen */
+  --tint-8: oklch(0.944 0.016 178);   /* sea mist */
 
   --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
   --sans:  "Geist", ui-sans-serif, system-ui, sans-serif;
   --hand:  "Caveat", cursive;
 
-  --shadow-rest: 0 1px 2px rgba(60, 40, 20, 0.06),
-                 0 8px 24px -12px rgba(60, 40, 20, 0.18);
-  --shadow-lift: 0 2px 4px rgba(60, 40, 20, 0.08),
-                 0 24px 48px -16px rgba(60, 40, 20, 0.28);
+  --shadow-rest: 0 1px 2px rgba(20, 30, 40, 0.07),
+                 0 8px 24px -12px rgba(20, 30, 40, 0.20);
+  --shadow-lift: 0 2px 4px rgba(20, 30, 40, 0.09),
+                 0 24px 48px -16px rgba(20, 30, 40, 0.30);
 }
 
 * { box-sizing: border-box; }
@@ -52,8 +52,8 @@ body::before {
   pointer-events: none;
   z-index: 1;
   background-image:
-    radial-gradient(ellipse at 20% 10%, oklch(0.99 0.012 78 / 0.55), transparent 60%),
-    radial-gradient(ellipse at 80% 90%, oklch(0.92 0.020 60 / 0.5), transparent 55%);
+    radial-gradient(ellipse at 15% 10%, oklch(0.98 0.006 200 / 0.6), transparent 55%),
+    radial-gradient(ellipse at 85% 88%, oklch(0.93 0.010 195 / 0.5), transparent 50%);
   mix-blend-mode: multiply;
 }
 
@@ -62,11 +62,11 @@ body::after {
   position: fixed; inset: 0;
   pointer-events: none;
   z-index: 2;
-  opacity: 0.35;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.25  0 0 0 0 0.18  0 0 0 0 0.12  0 0 0 0.08 0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
+  opacity: 0.28;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.14  0 0 0 0 0.18  0 0 0 0 0.22  0 0 0 0.09 0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
 }
 
-::selection { background: oklch(0.85 0.08 38 / 0.5); }
+::selection { background: oklch(0.75 0.08 152 / 0.35); }
 
 button, input, textarea {
   font: inherit;
@@ -79,8 +79,8 @@ button, input, textarea {
 button { cursor: pointer; }
 
 @keyframes breathe {
-  0%, 100% { opacity: 0.35; transform: scale(0.9); }
-  50%      { opacity: 1;    transform: scale(1.1); }
+  0%, 100% { opacity: 0.30; transform: scale(0.88); }
+  50%      { opacity: 1;    transform: scale(1.12); }
 }
 
 @keyframes haloOut {
