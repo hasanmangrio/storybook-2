@@ -1,16 +1,28 @@
-# React + Vite
+# Field Notes — A Private Journal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A beautiful personal journal web application where memories float as cards on a warm paper canvas.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **The Garden** — journal entries drift as floating cards with independent sine-wave motion and cursor parallax. Each card's headline tells the story.
+- **The Reader** — clicking a card FLIP-animates it from its exact screen position into a centered reading panel, with body text fading in line by line.
+- **The Page** — a fullscreen composer that morphs from the `+` button. Mood selector tints the paper. Breathing aura pulses during pauses. Typing produces soft ripple micro-animations.
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Vite + React. No UI libraries or animation dependencies — all motion runs via CSS transitions and `requestAnimationFrame` loops writing CSS custom properties directly to DOM nodes.
 
-## Expanding the ESLint configuration
+## Getting started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev
+```
+
+Then open [http://localhost:5173](http://localhost:5173).
+
+## Building
+
+```bash
+npm run build
+```
