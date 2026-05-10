@@ -1,0 +1,95 @@
+:root {
+  /* Warm paper palette */
+  --paper:        oklch(0.965 0.014 78);
+  --paper-deep:   oklch(0.945 0.018 76);
+  --paper-edge:   oklch(0.91 0.022 74);
+
+  --ink:          oklch(0.235 0.018 60);
+  --ink-soft:     oklch(0.38 0.020 60);
+  --ink-faint:    oklch(0.58 0.020 65);
+  --ink-ghost:    oklch(0.78 0.018 70);
+
+  --accent:       oklch(0.56 0.105 38);
+  --accent-soft:  oklch(0.78 0.060 38);
+
+  /* Card tints */
+  --tint-1: oklch(0.965 0.022 78);
+  --tint-2: oklch(0.955 0.026 50);
+  --tint-3: oklch(0.955 0.020 110);
+  --tint-4: oklch(0.955 0.020 165);
+  --tint-5: oklch(0.955 0.018 240);
+  --tint-6: oklch(0.955 0.022 25);
+  --tint-7: oklch(0.95 0.015 90);
+  --tint-8: oklch(0.955 0.018 295);
+
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans:  "Geist", ui-sans-serif, system-ui, sans-serif;
+  --hand:  "Caveat", cursive;
+
+  --shadow-rest: 0 1px 2px rgba(60, 40, 20, 0.06),
+                 0 8px 24px -12px rgba(60, 40, 20, 0.18);
+  --shadow-lift: 0 2px 4px rgba(60, 40, 20, 0.08),
+                 0 24px 48px -16px rgba(60, 40, 20, 0.28);
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image:
+    radial-gradient(ellipse at 20% 10%, oklch(0.99 0.012 78 / 0.55), transparent 60%),
+    radial-gradient(ellipse at 80% 90%, oklch(0.92 0.020 60 / 0.5), transparent 55%);
+  mix-blend-mode: multiply;
+}
+
+body::after {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.25  0 0 0 0 0.18  0 0 0 0 0.12  0 0 0 0.08 0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
+}
+
+::selection { background: oklch(0.85 0.08 38 / 0.5); }
+
+button, input, textarea {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  padding: 0;
+}
+button { cursor: pointer; }
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.35; transform: scale(0.9); }
+  50%      { opacity: 1;    transform: scale(1.1); }
+}
+
+@keyframes haloOut {
+  0%   { transform: scale(0.6); opacity: 0; }
+  30%  { opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes rippleOut {
+  0%   { transform: scale(1);  opacity: 0.55; }
+  100% { transform: scale(14); opacity: 0;    }
+}
