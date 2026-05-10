@@ -368,14 +368,17 @@ export default function Garden({
     onOpen(id);
   }
 
-  // Expose getCardRect to App
+  // Expose helpers to App
   useEffect(() => {
     if (cardRefsStore) {
       cardRefsStore.current = {
         getCardRect: (id) => {
           const el = cardRefs.current[id];
           return el ? el.getBoundingClientRect() : null;
-        }
+        },
+        setUserOffset: (id, x, y) => {
+          userOffsets.current[id] = { x, y };
+        },
       };
     }
   });
