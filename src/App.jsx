@@ -307,6 +307,62 @@ function InlineEditor({ x, y, tintColor, onSave, onDiscard }) {
   );
 }
 
+// ─── ThemeToggle ──────────────────────────────────────────────────────────────
+
+function SunIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+      <circle cx="7" cy="7" r="2.8" stroke="currentColor" strokeWidth="1.2"/>
+      <line x1="7" y1="0.5" x2="7" y2="2"   stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <line x1="7" y1="12" x2="7" y2="13.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <line x1="0.5" y1="7" x2="2"   y2="7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <line x1="12"  y1="7" x2="13.5" y2="7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <line x1="2.4" y1="2.4" x2="3.4" y2="3.4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <line x1="10.6" y1="10.6" x2="11.6" y2="11.6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <line x1="11.6" y1="2.4" x2="10.6" y2="3.4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <line x1="3.4" y1="10.6" x2="2.4" y2="11.6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+      <path
+        d="M11.5 8.5A5 5 0 0 1 5.5 2.5a5 5 0 1 0 6 6z"
+        stroke="currentColor" strokeWidth="1.2"
+        strokeLinecap="round" strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ThemeToggle({ theme, setTheme }) {
+  const dark = theme === 'dark';
+  return (
+    <button
+      onClick={() => setTheme(dark ? 'light' : 'dark')}
+      title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 6,
+        padding: '5px 10px',
+        borderRadius: 999,
+        border: '1px solid var(--paper-edge)',
+        background: 'var(--paper-deep)',
+        color: 'var(--ink-faint)',
+        fontFamily: 'var(--sans)', fontSize: 11,
+        letterSpacing: '0.14em', textTransform: 'uppercase',
+        transition: 'background 280ms ease, color 280ms ease, border-color 280ms ease',
+        cursor: 'pointer',
+      }}
+    >
+      {dark ? <SunIcon /> : <MoonIcon />}
+      {dark ? 'Light' : 'Dark'}
+    </button>
+  );
+}
+
 // ─── ModeToggle ───────────────────────────────────────────────────────────────
 
 function ModeToggle({ mode, setMode }) {
@@ -346,7 +402,7 @@ function ModeToggle({ mode, setMode }) {
 
 // ─── Header ───────────────────────────────────────────────────────────────────
 
-function Header({ count, mode, setMode }) {
+function Header({ count, mode, setMode, theme, setTheme }) {
   return (
     <div style={{
       position: 'fixed',
@@ -387,6 +443,10 @@ function Header({ count, mode, setMode }) {
       }}>
         <span style={{ width: 14, height: 1, background: 'var(--paper-edge)' }} />
         <span>{count} entries</span>
+      </div>
+
+      <div style={{ pointerEvents: 'auto' }}>
+        <ThemeToggle theme={theme} setTheme={setTheme} />
       </div>
     </div>
   );
@@ -472,6 +532,13 @@ export default function App() {
   const [mode, setMode]       = useState('float');
   const [deckFront, setDeckFront] = useState(0);
   const [justSavedId, setJustSavedId] = useState(null);
+  const [theme, setTheme] = useState(() =>
+    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  );
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   // Draft: position + tint color for the inline editor
   const [draft, setDraft] = useState(null); // { x, y, tintColor }
@@ -535,7 +602,7 @@ export default function App() {
 
   return (
     <>
-      <Header count={entries.length} mode={mode} setMode={setMode} />
+      <Header count={entries.length} mode={mode} setMode={setMode} theme={theme} setTheme={setTheme} />
 
       <Garden
         entries={entries}
