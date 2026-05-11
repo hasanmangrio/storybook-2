@@ -186,6 +186,7 @@ function InlineEditor({ x, y, tintColor, onSave, onDiscard }) {
       body: body.trim()
         ? body.split(/\n\n+/).map(s => s.trim()).filter(Boolean)
         : [''],
+      photos: [],
     });
   }
 
@@ -489,6 +490,10 @@ export default function App() {
     setTimeout(() => setOpenRect(null), 600);
   }
 
+  function updateEntry(id, changes) {
+    setEntries(prev => prev.map(e => e.id === id ? { ...e, ...changes } : e));
+  }
+
   function handleDrop(x, y, tintColor) {
     setDraft({ x, y, tintColor });
   }
@@ -579,6 +584,7 @@ export default function App() {
           entry={openEntryObj}
           fromRect={openRect}
           onClose={closeEntry}
+          onUpdate={(changes) => updateEntry(openId, changes)}
         />
       )}
 

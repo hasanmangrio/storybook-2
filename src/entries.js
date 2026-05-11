@@ -7,6 +7,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 4,
     body: [""],
+    photos: [],
   },
   {
     id: "e-quitting",
@@ -16,6 +17,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 3,
     body: [""],
+    photos: [],
   },
   {
     id: "e-family",
@@ -25,6 +27,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 7,
     body: [""],
+    photos: [],
   },
   {
     id: "e-opinion",
@@ -34,6 +37,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 6,
     body: [""],
+    photos: [],
   },
   {
     id: "e-emotional-dump",
@@ -43,6 +47,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 5,
     body: [""],
+    photos: [],
   },
   {
     id: "e-night-voice",
@@ -52,6 +57,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 8,
     body: [""],
+    photos: [],
   },
   {
     id: "e-overland",
@@ -61,6 +67,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 2,
     body: [""],
+    photos: [],
   },
   {
     id: "e-guidance",
@@ -70,6 +77,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 1,
     body: [""],
+    photos: [],
   },
   {
     id: "e-rage",
@@ -79,6 +87,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 6,
     body: [""],
+    photos: [],
   },
   {
     id: "e-maniac",
@@ -88,6 +97,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 3,
     body: [""],
+    photos: [],
   },
   {
     id: "e-kids-theory",
@@ -97,6 +107,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 4,
     body: [""],
+    photos: [],
   },
   {
     id: "e-compete",
@@ -106,6 +117,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 2,
     body: [""],
+    photos: [],
   },
   {
     id: "e-umrah",
@@ -115,6 +127,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 1,
     body: [""],
+    photos: [],
   },
   {
     id: "e-journey-begins",
@@ -124,6 +137,7 @@ const SEED_ENTRIES = [
     weather: "—",
     tint: 7,
     body: [""],
+    photos: [],
   },
 ];
 

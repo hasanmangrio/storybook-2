@@ -59,6 +59,10 @@ const Card = forwardRef(function Card(
     ? (deckZIndex ?? 5)
     : (dragging ? 100 : (hovered ? 20 : 5));
 
+  const pad = layout.size === "s" ? 14 : layout.size === "m" ? 18 : 22;
+  const hasPhoto = entry.photos && entry.photos.length > 0;
+  const coverPhoto = hasPhoto ? entry.photos[0] : null;
+
   return (
     <div
       ref={ref}
@@ -102,47 +106,79 @@ const Card = forwardRef(function Card(
             ? "translateY(-6px) scale(1.025)"
             : "translateY(0) scale(1)",
           transition: "transform 500ms cubic-bezier(.2,.8,.2,1), box-shadow 400ms ease",
-          padding: layout.size === "s" ? "18px 20px" : layout.size === "m" ? "22px 24px" : "28px 30px",
+          padding: `${pad}px`,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
+          gap: hasPhoto ? 8 : 0,
+          justifyContent: hasPhoto ? "flex-start" : "space-between",
           overflow: "hidden",
           cursor,
         }}
       >
+        {/* Date + mood header */}
         <div style={{
           fontFamily: "var(--sans)",
-          fontSize: 11,
+          fontSize: 10,
           letterSpacing: "0.12em",
           textTransform: "uppercase",
           color: "var(--ink-faint)",
           display: "flex",
-          gap: 12,
+          gap: 8,
+          flexShrink: 0,
         }}>
           <span>{entry.date}</span>
           <span style={{ color: "var(--accent-soft)" }}>·</span>
           <span style={{
             fontStyle: "italic", textTransform: "lowercase",
-            letterSpacing: "0.04em", fontFamily: "var(--serif)", fontSize: 13,
+            letterSpacing: "0.04em", fontFamily: "var(--serif)", fontSize: 12,
           }}>
             {entry.mood}
           </span>
         </div>
 
+        {/* Cover photo — sits inside the sticky note with rounded corners */}
+        {coverPhoto && (
+          <div style={{
+            flex: 1,
+            borderRadius: 10,
+            overflow: "hidden",
+            background: "oklch(0 0 0 / 0.08)",
+            flexShrink: 1,
+            minHeight: 0,
+          }}>
+            <img
+              src={coverPhoto.dataUrl}
+              alt={coverPhoto.caption || entry.title}
+              draggable={false}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                display: "block",
+              }}
+            />
+          </div>
+        )}
+
+        {/* Title */}
         <div style={{
           fontFamily: "var(--serif)",
           fontWeight: 400,
           fontVariationSettings: "'opsz' 36",
-          fontSize: layout.size === "s" ? 22 : layout.size === "m" ? 27 : 33,
-          lineHeight: 1.18,
+          fontSize: hasPhoto
+            ? (layout.size === "s" ? 14 : layout.size === "m" ? 15 : 17)
+            : (layout.size === "s" ? 22 : layout.size === "m" ? 27 : 33),
+          lineHeight: hasPhoto ? 1.25 : 1.18,
           color: "var(--ink)",
           letterSpacing: "-0.012em",
           textWrap: "balance",
+          flexShrink: 0,
         }}>
           {entry.title}
         </div>
 
-        {layout.size !== "s" && (
+        {/* Weather line — only when no photo and not small */}
+        {layout.size !== "s" && !hasPhoto && (
           <div style={{
             display: "flex",
             alignItems: "center",
@@ -154,6 +190,23 @@ const Card = forwardRef(function Card(
           }}>
             <div style={{ flex: 1, height: 1, background: "var(--paper-edge)" }} />
             <span>{entry.weather}</span>
+          </div>
+        )}
+
+        {/* Photo count badge */}
+        {entry.photos && entry.photos.length > 1 && (
+          <div style={{
+            position: "absolute",
+            top: pad, right: pad,
+            background: "oklch(0 0 0 / 0.45)",
+            color: "#fff",
+            borderRadius: 99,
+            padding: "2px 7px",
+            fontFamily: "var(--sans)",
+            fontSize: 9,
+            letterSpacing: "0.08em",
+          }}>
+            {entry.photos.length}
           </div>
         )}
       </div>
