@@ -180,6 +180,8 @@ export default function Garden({
   const deckLerpRef = useRef({});
   // Cached deck target positions
   const deckTargetsRef = useRef({});
+  // True while cards are dispersing back to their natural positions after leaving deck mode
+  const dispersingRef = useRef(false);
   // Track which id is currently being dragged (for cursor state in React)
   const [draggingId, setDraggingId] = useState(null);
 
@@ -253,11 +255,13 @@ export default function Garden({
         deckLerpRef.current[e.id] = { tx, ty, tr };
       });
     } else {
-      // Returning to float: carry current deck position into userOffsets so there's no jump
+      // Returning to float: seed userOffsets from current deck lerp positions so
+      // there's no jump, then let the rAF decay them to 0 (spreading cards out).
       entries.forEach(e => {
         const dl = deckLerpRef.current[e.id];
         if (dl) userOffsets.current[e.id] = { x: dl.tx, y: dl.ty };
       });
+      dispersingRef.current = true;
     }
   }, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -327,6 +331,15 @@ export default function Garden({
           // float mode
           const uo = userOffsets.current[e.id] || { x: 0, y: 0 };
           const isDragging = dragRef.current?.id === e.id;
+
+          // Decay offset toward 0 while dispersing from deck, skip dragged card
+          if (dispersingRef.current && !isDragging) {
+            const DECAY = 0.038; // ~1.5 s to fully disperse at 60 fps
+            uo.x *= (1 - DECAY);
+            uo.y *= (1 - DECAY);
+            userOffsets.current[e.id] = uo;
+          }
+
           const driftX = isDragging ? 0 : Math.sin(t * 0.35 * s.speed + s.phaseX) * 8;
           const driftY = isDragging ? 0 : Math.cos(t * 0.30 * s.speed + s.phaseY) * 10;
           const driftR = isDragging ? 0 : Math.sin(t * 0.20 * s.speed + s.phaseR) * 0.8;
@@ -337,6 +350,19 @@ export default function Garden({
           ref.style.setProperty("--tr", `${driftR}deg`);
         }
       });
+
+      // Clear dispersal flag once all offsets have decayed to near-zero
+      if (dispersingRef.current && mode === 'float') {
+        const done = entries.every(e => {
+          const uo = userOffsets.current[e.id];
+          return !uo || (Math.abs(uo.x) < 1.5 && Math.abs(uo.y) < 1.5);
+        });
+        if (done) {
+          entries.forEach(e => { userOffsets.current[e.id] = { x: 0, y: 0 }; });
+          dispersingRef.current = false;
+        }
+      }
+
       rafRef.current = requestAnimationFrame(tick);
     }
     rafRef.current = requestAnimationFrame(tick);
@@ -368,14 +394,17 @@ export default function Garden({
     onOpen(id);
   }
 
-  // Expose getCardRect to App
+  // Expose helpers to App
   useEffect(() => {
     if (cardRefsStore) {
       cardRefsStore.current = {
         getCardRect: (id) => {
           const el = cardRefs.current[id];
           return el ? el.getBoundingClientRect() : null;
-        }
+        },
+        setUserOffset: (id, x, y) => {
+          userOffsets.current[id] = { x, y };
+        },
       };
     }
   });
