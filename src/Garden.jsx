@@ -44,6 +44,20 @@ function sizePx(size, scale) {
 
 function tintVar(n) { return `var(--tint-${((n - 1) % 8) + 1})`; }
 
+// Richer tint colors for grid mode — same hues as the CSS vars but with
+// enough chroma (~8-10×) to look like real coloured sticky notes at small size.
+const GRID_TINTS = [
+  "oklch(0.91 0.055 198)",  // teal
+  "oklch(0.91 0.070 158)",  // sage green
+  "oklch(0.91 0.055 220)",  // slate blue
+  "oklch(0.91 0.080 148)",  // leaf green
+  "oklch(0.91 0.065 250)",  // steel blue
+  "oklch(0.91 0.055 202)",  // cool steel
+  "oklch(0.91 0.048 212)",  // sky blue
+  "oklch(0.91 0.072 174)",  // sea mint
+];
+function gridTint(n) { return GRID_TINTS[((n - 1) % 8)]; }
+
 const Card = forwardRef(function Card(
   { entry, layout, onOpen, onCardMouseDown, focused, hidden, dragging, mode, deckZIndex },
   ref
@@ -69,7 +83,7 @@ const Card = forwardRef(function Card(
         }}
       >
         <div style={{
-          background: tintVar(entry.tint),
+          background: gridTint(entry.tint),
           borderRadius: 4,
           boxShadow: hovered ? "var(--shadow-lift)" : "var(--shadow-rest)",
           transform: hovered ? "translateY(-5px) scale(1.02)" : "translateY(0) scale(1)",
