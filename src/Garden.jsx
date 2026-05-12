@@ -49,6 +49,97 @@ const Card = forwardRef(function Card(
   ref
 ) {
   const [hovered, setHovered] = useState(false);
+  const hasPhoto = entry.photos && entry.photos.length > 0;
+  const coverPhoto = hasPhoto ? entry.photos[0] : null;
+
+  // ── Grid mode: simple uniform sticky note, no animation ──────────────────
+  if (mode === 'grid') {
+    return (
+      <div
+        ref={ref}
+        data-id={entry.id}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onClick={() => onOpen(entry.id)}
+        style={{
+          position: "relative",
+          opacity: hidden ? 0 : 1,
+          pointerEvents: hidden ? "none" : "auto",
+          userSelect: "none",
+        }}
+      >
+        <div style={{
+          background: tintVar(entry.tint),
+          borderRadius: 4,
+          boxShadow: hovered ? "var(--shadow-lift)" : "var(--shadow-rest)",
+          transform: hovered ? "translateY(-5px) scale(1.02)" : "translateY(0) scale(1)",
+          transition: "transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease",
+          padding: 16,
+          aspectRatio: "4 / 3",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: hasPhoto ? "flex-start" : "space-between",
+          gap: hasPhoto ? 8 : 0,
+          overflow: "hidden",
+          cursor: "pointer",
+        }}>
+          {/* Date + mood */}
+          <div style={{
+            fontFamily: "var(--sans)", fontSize: 9,
+            letterSpacing: "0.12em", textTransform: "uppercase",
+            color: "var(--ink-faint)", display: "flex", gap: 6, flexShrink: 0,
+          }}>
+            <span>{entry.date}</span>
+            <span style={{ color: "var(--accent-soft)" }}>·</span>
+            <span style={{ fontStyle: "italic", textTransform: "lowercase", fontFamily: "var(--serif)", fontSize: 11 }}>
+              {entry.mood}
+            </span>
+          </div>
+
+          {/* Cover photo */}
+          {coverPhoto && (
+            <div style={{ flex: 1, borderRadius: 8, overflow: "hidden", minHeight: 0, background: "oklch(0 0 0 / 0.08)" }}>
+              <img src={coverPhoto.dataUrl} alt={coverPhoto.caption || entry.title} draggable={false}
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            </div>
+          )}
+
+          {/* Title */}
+          <div style={{
+            fontFamily: "var(--serif)", fontWeight: 400,
+            fontVariationSettings: "'opsz' 36",
+            fontSize: hasPhoto ? 13 : 18,
+            lineHeight: 1.2, color: "var(--ink)",
+            letterSpacing: "-0.012em", textWrap: "balance", flexShrink: 0,
+          }}>
+            {entry.title}
+          </div>
+
+          {/* Weather line */}
+          {!hasPhoto && (
+            <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--sans)", fontSize: 10, color: "var(--ink-ghost)" }}>
+              <div style={{ flex: 1, height: 1, background: "var(--paper-edge)" }} />
+              <span>{entry.weather}</span>
+            </div>
+          )}
+
+          {/* Photo count badge */}
+          {entry.photos && entry.photos.length > 1 && (
+            <div style={{
+              position: "absolute", top: 10, right: 10,
+              background: "oklch(0 0 0 / 0.45)", color: "#fff",
+              borderRadius: 99, padding: "2px 6px",
+              fontFamily: "var(--sans)", fontSize: 9, letterSpacing: "0.08em",
+            }}>
+              {entry.photos.length}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Float / Deck mode ─────────────────────────────────────────────────────
   const sz = sizePx(layout.size, layout.scale || 1);
 
   const cursor = mode === 'deck'
@@ -60,8 +151,6 @@ const Card = forwardRef(function Card(
     : (dragging ? 100 : (hovered ? 20 : 5));
 
   const pad = layout.size === "s" ? 14 : layout.size === "m" ? 18 : 22;
-  const hasPhoto = entry.photos && entry.photos.length > 0;
-  const coverPhoto = hasPhoto ? entry.photos[0] : null;
 
   return (
     <div
@@ -358,6 +447,7 @@ export default function Garden({
   useEffect(() => {
     const start = performance.now();
     function tick(now) {
+      if (mode === 'grid') { rafRef.current = requestAnimationFrame(tick); return; }
       const t = (now - start) / 1000;
       const m = mouseRef.current;
       m.tx += (m.x - m.tx) * 0.06;
@@ -463,7 +553,45 @@ export default function Garden({
   });
 
   const n = entries.length;
+  const gridCols = vw < 640 ? 2 : vw < 1024 ? 3 : 4;
 
+  // ── Grid layout ────────────────────────────────────────────────────────────
+  if (mode === 'grid') {
+    return (
+      <div
+        ref={stageRef}
+        style={{
+          position: "absolute",
+          inset: 0,
+          overflowY: "auto",
+          zIndex: 3,
+          padding: `80px 32px 120px`,
+          display: "grid",
+          gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
+          gap: 14,
+          alignContent: "start",
+        }}
+      >
+        {entries.map((e) => (
+          <Card
+            key={e.id}
+            ref={(el) => { if (el) cardRefs.current[e.id] = el; }}
+            entry={e}
+            layout={{ size: "m", scale: 1, rot: 0 }}
+            onOpen={handleOpen}
+            onCardMouseDown={() => {}}
+            focused={null}
+            hidden={hiddenIds && hiddenIds.has(e.id)}
+            dragging={false}
+            mode="grid"
+            deckZIndex={5}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  // ── Float / Deck layout ────────────────────────────────────────────────────
   return (
     <div
       ref={stageRef}

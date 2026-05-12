@@ -28,6 +28,17 @@ function StackIcon() {
   );
 }
 
+function GridIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
+      <rect x="0.6" y="0.6" width="4.8" height="4.8" rx="0.7" stroke="currentColor" strokeWidth="1.1"/>
+      <rect x="7.6" y="0.6" width="4.8" height="4.8" rx="0.7" stroke="currentColor" strokeWidth="1.1"/>
+      <rect x="0.6" y="7.6" width="4.8" height="4.8" rx="0.7" stroke="currentColor" strokeWidth="1.1"/>
+      <rect x="7.6" y="7.6" width="4.8" height="4.8" rx="0.7" stroke="currentColor" strokeWidth="1.1"/>
+    </svg>
+  );
+}
+
 // ─── utils ────────────────────────────────────────────────────────────────────
 
 function todayShort() {
@@ -317,14 +328,15 @@ function ModeToggle({ mode, setMode }) {
       {[
         { id: 'float', label: 'Float', Icon: ScatterIcon },
         { id: 'deck',  label: 'Deck',  Icon: StackIcon  },
+        { id: 'grid',  label: 'Grid',  Icon: GridIcon   },
       ].map(({ id, label, Icon }) => (
         <button
           key={id}
           onClick={() => setMode(id)}
           title={label}
           style={{
-            display: 'flex', alignItems: 'center', gap: 6,
-            padding: '5px 12px', borderRadius: 999,
+            display: 'flex', alignItems: 'center', gap: 5,
+            padding: '5px 10px', borderRadius: 999,
             background: mode === id ? 'var(--ink)' : 'transparent',
             color: mode === id ? 'var(--paper)' : 'var(--ink-ghost)',
             fontFamily: 'var(--sans)', fontSize: 11,
@@ -347,8 +359,8 @@ function Header({ count, mode, setMode, theme, setTheme }) {
     <div style={{
       position: 'fixed',
       top: 0, left: 0, right: 0,
-      padding: '22px 32px',
-      display: 'flex', alignItems: 'center', gap: 20,
+      padding: '18px 24px',
+      display: 'flex', alignItems: 'center', gap: 12,
       zIndex: 30, pointerEvents: 'none',
     }}>
       <div style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'baseline', gap: 12 }}>
@@ -544,7 +556,7 @@ export default function App() {
 
       {justSavedId && <SavedFlourish id={justSavedId} gardenStore={gardenStore} />}
 
-      <DragToCreate onDrop={handleDrop} hidden={overlayActive} />
+      <DragToCreate onDrop={handleDrop} hidden={overlayActive || mode === 'grid'} />
 
       {mode === 'deck' && !openId && !draft && (
         <DeckHint
