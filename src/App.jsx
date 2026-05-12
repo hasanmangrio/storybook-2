@@ -37,7 +37,6 @@ function todayShort() {
 }
 
 // ─── DragToCreate ─────────────────────────────────────────────────────────────
-// A FigJam-style draggable sticky note. Drag it onto the canvas to place a new entry.
 
 function DragToCreate({ onDrop, hidden }) {
   const [dragging, setDragging] = useState(false);
@@ -58,7 +57,6 @@ function DragToCreate({ onDrop, hidden }) {
     const dy = e.clientY - startRef.current.y;
     if (Math.hypot(dx, dy) > 14) {
       onDrop(e.clientX, e.clientY, colorRef.current);
-      // pick a fresh color for next drop
       colorRef.current = tints[Math.floor(Math.random() * tints.length)];
     }
   }, [onDrop, onMove]);
@@ -72,12 +70,10 @@ function DragToCreate({ onDrop, hidden }) {
     window.addEventListener('mouseup', onUp);
   }
 
-  // Grip dot grid
   const dots = Array.from({ length: 6 });
 
   return (
     <>
-      {/* The widget itself */}
       <div
         onMouseDown={handleMouseDown}
         style={{
@@ -103,43 +99,27 @@ function DragToCreate({ onDrop, hidden }) {
       >
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '3px 4px' }}>
           {dots.map((_, i) => (
-            <div key={i} style={{
-              width: 3, height: 3, borderRadius: '50%',
-              background: 'var(--ink-ghost)',
-            }} />
+            <div key={i} style={{ width: 3, height: 3, borderRadius: '50%', background: 'var(--ink-ghost)' }} />
           ))}
         </div>
-        <span style={{
-          fontFamily: 'var(--sans)', fontSize: 10,
-          letterSpacing: '0.14em', textTransform: 'uppercase',
-          color: 'var(--ink-faint)',
-        }}>
+        <span style={{ fontFamily: 'var(--sans)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-faint)' }}>
           New Entry
         </span>
       </div>
 
-      {/* Ghost card that follows cursor */}
       {dragging && (
         <div style={{
           position: 'fixed',
-          left: ghost.x - 130,
-          top:  ghost.y - 90,
+          left: ghost.x - 130, top: ghost.y - 90,
           width: 260, height: 180,
           background: colorRef.current,
           border: '1px solid var(--paper-edge)',
           borderRadius: 3,
           boxShadow: '0 20px 50px -12px rgba(20,30,40,0.28), 0 4px 14px -4px rgba(20,30,40,0.14)',
-          pointerEvents: 'none',
-          zIndex: 200,
-          padding: '18px 20px',
-          display: 'flex', alignItems: 'flex-end',
-          opacity: 0.92,
+          pointerEvents: 'none', zIndex: 200,
+          padding: '18px 20px', display: 'flex', alignItems: 'flex-end', opacity: 0.92,
         }}>
-          <span style={{
-            fontFamily: 'var(--serif)',
-            fontSize: 15, fontStyle: 'italic',
-            color: 'var(--ink-ghost)',
-          }}>
+          <span style={{ fontFamily: 'var(--serif)', fontSize: 15, fontStyle: 'italic', color: 'var(--ink-ghost)' }}>
             Drop anywhere…
           </span>
         </div>
@@ -149,7 +129,6 @@ function DragToCreate({ onDrop, hidden }) {
 }
 
 // ─── InlineEditor ─────────────────────────────────────────────────────────────
-// Minimal card editor that appears at the drop position.
 
 function InlineEditor({ x, y, tintColor, onSave, onDiscard }) {
   const [title, setTitle] = useState('');
@@ -158,7 +137,6 @@ function InlineEditor({ x, y, tintColor, onSave, onDiscard }) {
   const bodyRef  = useRef(null);
 
   useEffect(() => {
-    // slight delay so the drop animation settles
     const t = setTimeout(() => titleRef.current?.focus(), 60);
     return () => clearTimeout(t);
   }, []);
@@ -169,7 +147,6 @@ function InlineEditor({ x, y, tintColor, onSave, onDiscard }) {
 
   function save() {
     if (!title.trim() && !body.trim()) { onDiscard(); return; }
-    // Map tint CSS var back to a tint number
     const tintMap = {
       'var(--tint-1)': 1, 'var(--tint-2)': 2, 'var(--tint-3)': 3,
       'var(--tint-4)': 4, 'var(--tint-5)': 5, 'var(--tint-6)': 6,
@@ -192,59 +169,40 @@ function InlineEditor({ x, y, tintColor, onSave, onDiscard }) {
 
   return (
     <>
-      {/* Click-outside saves */}
-      <div
-        onClick={save}
-        style={{ position: 'fixed', inset: 0, zIndex: 55, cursor: 'default' }}
-      />
+      <div onClick={save} style={{ position: 'fixed', inset: 0, zIndex: 55, cursor: 'default' }} />
 
       <div style={{
-        position: 'fixed',
-        left, top,
-        width: W,
-        zIndex: 60,
-        background: tintColor,
-        borderRadius: 3,
+        position: 'fixed', left, top, width: W, zIndex: 60,
+        background: tintColor, borderRadius: 3,
         boxShadow: '0 24px 60px -14px rgba(20,30,40,0.32), 0 6px 18px -6px rgba(20,30,40,0.16)',
         overflow: 'hidden',
         animation: 'editorDrop 220ms cubic-bezier(.2,.8,.2,1)',
       }}>
-        {/* Title row */}
         <div style={{ padding: '16px 16px 10px' }}>
           <input
             ref={titleRef}
             value={title}
             onChange={e => setTitle(e.target.value)}
             onKeyDown={e => {
-              if (e.key === 'Tab' || e.key === 'Enter') {
-                e.preventDefault();
-                bodyRef.current?.focus();
-              }
+              if (e.key === 'Tab' || e.key === 'Enter') { e.preventDefault(); bodyRef.current?.focus(); }
               if (e.key === 'Escape') onDiscard();
             }}
             placeholder="Title"
             style={{
-              width: '100%',
-              fontFamily: 'var(--serif)',
-              fontSize: 19,
-              fontWeight: 500,
-              color: 'var(--ink)',
-              caretColor: 'var(--accent)',
-              letterSpacing: '-0.01em',
+              width: '100%', fontFamily: 'var(--serif)', fontSize: 19,
+              fontWeight: 500, color: 'var(--ink)', caretColor: 'var(--accent)', letterSpacing: '-0.01em',
             }}
           />
         </div>
 
         <div style={{ height: 1, background: 'oklch(0.0 0 0 / 0.07)', margin: '0 16px' }} />
 
-        {/* Body */}
         <div style={{ position: 'relative' }}>
           {!body && (
             <div style={{
               position: 'absolute', top: 12, left: 16,
-              fontFamily: 'var(--serif)', fontSize: 15,
-              lineHeight: 1.6, color: 'var(--ink-ghost)',
-              fontStyle: 'italic', pointerEvents: 'none',
+              fontFamily: 'var(--serif)', fontSize: 15, lineHeight: 1.6,
+              color: 'var(--ink-ghost)', fontStyle: 'italic', pointerEvents: 'none',
             }}>
               Write…
             </div>
@@ -259,38 +217,25 @@ function InlineEditor({ x, y, tintColor, onSave, onDiscard }) {
             }}
             rows={5}
             style={{
-              display: 'block', width: '100%',
-              resize: 'none', padding: '12px 16px',
-              fontFamily: 'var(--serif)', fontSize: 15,
-              lineHeight: 1.62, color: 'var(--ink-soft)',
-              caretColor: 'var(--accent)',
+              display: 'block', width: '100%', resize: 'none', padding: '12px 16px',
+              fontFamily: 'var(--serif)', fontSize: 15, lineHeight: 1.62,
+              color: 'var(--ink-soft)', caretColor: 'var(--accent)',
             }}
           />
         </div>
 
-        {/* Action bar */}
         <div style={{
-          padding: '8px 12px',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          background: 'oklch(0.0 0 0 / 0.04)',
-          borderTop: '1px solid oklch(0.0 0 0 / 0.07)',
+          padding: '8px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          background: 'oklch(0.0 0 0 / 0.04)', borderTop: '1px solid oklch(0.0 0 0 / 0.07)',
         }}>
-          <span style={{
-            fontFamily: 'var(--sans)', fontSize: 10,
-            letterSpacing: '0.12em', textTransform: 'uppercase',
-            color: 'var(--ink-ghost)',
-          }}>
+          <span style={{ fontFamily: 'var(--sans)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-ghost)' }}>
             ⌘↵ to post · Esc to discard
           </span>
           <button
             onClick={save}
             style={{
-              fontFamily: 'var(--sans)', fontSize: 10,
-              letterSpacing: '0.14em', textTransform: 'uppercase',
-              color: 'var(--paper)',
-              background: 'var(--ink)',
-              padding: '6px 16px',
-              borderRadius: 3,
+              fontFamily: 'var(--sans)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase',
+              color: 'var(--paper)', background: 'var(--ink)', padding: '6px 16px', borderRadius: 3,
             }}
           >
             Post
@@ -347,12 +292,9 @@ function ThemeToggle({ theme, setTheme }) {
       aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
       style={{
         display: 'flex', alignItems: 'center', gap: 6,
-        padding: '5px 10px',
-        borderRadius: 999,
-        border: '1px solid var(--paper-edge)',
-        background: 'var(--paper-deep)',
-        color: 'var(--ink-faint)',
-        fontFamily: 'var(--sans)', fontSize: 11,
+        padding: '5px 10px', borderRadius: 999,
+        border: '1px solid var(--paper-edge)', background: 'var(--paper-deep)',
+        color: 'var(--ink-faint)', fontFamily: 'var(--sans)', fontSize: 11,
         letterSpacing: '0.14em', textTransform: 'uppercase',
         transition: 'background 280ms ease, color 280ms ease, border-color 280ms ease',
         cursor: 'pointer',
@@ -370,9 +312,7 @@ function ModeToggle({ mode, setMode }) {
   return (
     <div style={{
       display: 'flex', alignItems: 'center',
-      background: 'var(--paper-edge)',
-      borderRadius: 999,
-      padding: 3, gap: 2,
+      background: 'var(--paper-edge)', borderRadius: 999, padding: 3, gap: 2,
     }}>
       {[
         { id: 'float', label: 'Float', Icon: ScatterIcon },
@@ -384,8 +324,7 @@ function ModeToggle({ mode, setMode }) {
           title={label}
           style={{
             display: 'flex', alignItems: 'center', gap: 6,
-            padding: '5px 12px',
-            borderRadius: 999,
+            padding: '5px 12px', borderRadius: 999,
             background: mode === id ? 'var(--ink)' : 'transparent',
             color: mode === id ? 'var(--paper)' : 'var(--ink-ghost)',
             fontFamily: 'var(--sans)', fontSize: 11,
@@ -410,21 +349,13 @@ function Header({ count, mode, setMode, theme, setTheme }) {
       top: 0, left: 0, right: 0,
       padding: '22px 32px',
       display: 'flex', alignItems: 'center', gap: 20,
-      zIndex: 30,
-      pointerEvents: 'none',
+      zIndex: 30, pointerEvents: 'none',
     }}>
       <div style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'baseline', gap: 12 }}>
-        <span style={{
-          fontFamily: 'var(--hand)', fontSize: 28,
-          color: 'var(--accent)', lineHeight: 1,
-        }}>
+        <span style={{ fontFamily: 'var(--hand)', fontSize: 28, color: 'var(--accent)', lineHeight: 1 }}>
           field notes
         </span>
-        <span style={{
-          fontFamily: 'var(--sans)', fontSize: 10,
-          letterSpacing: '0.20em', textTransform: 'uppercase',
-          color: 'var(--ink-ghost)',
-        }}>
+        <span style={{ fontFamily: 'var(--sans)', fontSize: 10, letterSpacing: '0.20em', textTransform: 'uppercase', color: 'var(--ink-ghost)' }}>
           a private journal
         </span>
       </div>
@@ -460,8 +391,7 @@ function DeckHint({ deckFront, total, onPrev, onNext }) {
     width: 32, height: 32, borderRadius: '50%',
     border: '1px solid var(--paper-edge)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
-    color: 'var(--ink-faint)',
-    background: 'var(--paper)',
+    color: 'var(--ink-faint)', background: 'var(--paper)',
     transition: 'background 200ms, color 200ms',
   };
   function hoverOn(e) { e.currentTarget.style.background = 'var(--ink)'; e.currentTarget.style.color = 'var(--paper)'; }
@@ -473,8 +403,7 @@ function DeckHint({ deckFront, total, onPrev, onNext }) {
       transform: 'translateX(-50%)',
       zIndex: 25, display: 'flex', alignItems: 'center', gap: 16,
       fontFamily: 'var(--sans)', fontSize: 11,
-      letterSpacing: '0.16em', textTransform: 'uppercase',
-      color: 'var(--ink-faint)',
+      letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-faint)',
     }}>
       <button style={btnStyle} onClick={onPrev} onMouseEnter={hoverOn} onMouseLeave={hoverOff} aria-label="Previous">
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -517,8 +446,7 @@ function SavedFlourish({ id, gardenStore }) {
       marginLeft: -180, marginTop: -180,
       borderRadius: '50%',
       border: '1px solid var(--accent-soft)',
-      pointerEvents: 'none',
-      zIndex: 4,
+      pointerEvents: 'none', zIndex: 4,
       animation: 'haloOut 1.6s cubic-bezier(.2,.8,.2,1) forwards',
     }} />
   );
@@ -541,9 +469,7 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  // Draft: position + tint color for the inline editor
-  const [draft, setDraft] = useState(null); // { x, y, tintColor }
-
+  const [draft, setDraft] = useState(null);
   const gardenStore = useRef(null);
 
   function openEntry(id) {
@@ -557,8 +483,8 @@ export default function App() {
     setTimeout(() => setOpenRect(null), 600);
   }
 
-  function updateEntry(id, changes) {
-    setEntries(prev => prev.map(e => e.id === id ? { ...e, ...changes } : e));
+  function saveEntry(updated) {
+    setEntries(prev => prev.map(e => e.id === updated.id ? updated : e));
   }
 
   function handleDrop(x, y, tintColor) {
@@ -566,12 +492,8 @@ export default function App() {
   }
 
   function saveDraft(entry) {
-    // Pre-set the user offset so the card lands at the drop position.
-    // New entry prepends to list → it gets LAYOUT[0]: x=14%, y=20%.
     const stageW = window.innerWidth;
     const stageH = window.innerHeight;
-    const scale = stageW < 760 ? 0.62 : stageW < 1024 ? 0.78 : stageW < 1280 ? 0.9 : 1;
-    // LAYOUT[0] size is 'l' → base 340×240. Card center = (14% of stage, 20% of stage).
     const baseCX = stageW * 0.14;
     const baseCY = stageH * 0.20;
     gardenStore.current?.setUserOffset(entry.id, draft.x - baseCX, draft.y - baseCY);
@@ -622,10 +544,7 @@ export default function App() {
 
       {justSavedId && <SavedFlourish id={justSavedId} gardenStore={gardenStore} />}
 
-      <DragToCreate
-        onDrop={handleDrop}
-        hidden={overlayActive}
-      />
+      <DragToCreate onDrop={handleDrop} hidden={overlayActive} />
 
       {mode === 'deck' && !openId && !draft && (
         <DeckHint
@@ -651,7 +570,7 @@ export default function App() {
           entry={openEntryObj}
           fromRect={openRect}
           onClose={closeEntry}
-          onUpdate={(changes) => updateEntry(openId, changes)}
+          onSave={saveEntry}
         />
       )}
 
