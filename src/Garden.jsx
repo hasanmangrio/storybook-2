@@ -72,26 +72,26 @@ const Card = forwardRef(function Card(
           background: tintVar(entry.tint),
           borderRadius: 4,
           boxShadow: hovered ? "var(--shadow-lift)" : "var(--shadow-rest)",
-          transform: hovered ? "translateY(-5px) scale(1.02)" : "translateY(0) scale(1)",
+          transform: hovered ? "translateY(-4px) scale(1.015)" : "translateY(0) scale(1)",
           transition: "transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease",
-          padding: 16,
-          aspectRatio: "4 / 3",
+          padding: "12px 14px",
+          aspectRatio: "5 / 3",
           display: "flex",
           flexDirection: "column",
           justifyContent: hasPhoto ? "flex-start" : "space-between",
-          gap: hasPhoto ? 8 : 0,
+          gap: hasPhoto ? 6 : 0,
           overflow: "hidden",
           cursor: "pointer",
         }}>
           {/* Date + mood */}
           <div style={{
-            fontFamily: "var(--sans)", fontSize: 9,
-            letterSpacing: "0.12em", textTransform: "uppercase",
-            color: "var(--ink-faint)", display: "flex", gap: 6, flexShrink: 0,
+            fontFamily: "var(--sans)", fontSize: 8,
+            letterSpacing: "0.10em", textTransform: "uppercase",
+            color: "var(--ink-faint)", display: "flex", gap: 5, flexShrink: 0,
           }}>
             <span>{entry.date}</span>
             <span style={{ color: "var(--accent-soft)" }}>·</span>
-            <span style={{ fontStyle: "italic", textTransform: "lowercase", fontFamily: "var(--serif)", fontSize: 11 }}>
+            <span style={{ fontStyle: "italic", textTransform: "lowercase", fontFamily: "var(--serif)", fontSize: 10 }}>
               {entry.mood}
             </span>
           </div>
@@ -108,16 +108,20 @@ const Card = forwardRef(function Card(
           <div style={{
             fontFamily: "var(--serif)", fontWeight: 400,
             fontVariationSettings: "'opsz' 36",
-            fontSize: hasPhoto ? 13 : 18,
+            fontSize: hasPhoto ? 14 : 22,
             lineHeight: 1.2, color: "var(--ink)",
             letterSpacing: "-0.012em", textWrap: "balance", flexShrink: 0,
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
           }}>
             {entry.title}
           </div>
 
           {/* Weather line */}
           {!hasPhoto && (
-            <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--sans)", fontSize: 10, color: "var(--ink-ghost)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: "var(--sans)", fontSize: 9, color: "var(--ink-ghost)" }}>
               <div style={{ flex: 1, height: 1, background: "var(--paper-edge)" }} />
               <span>{entry.weather}</span>
             </div>
@@ -553,7 +557,7 @@ export default function Garden({
   });
 
   const n = entries.length;
-  const gridCols = vw < 640 ? 2 : vw < 1024 ? 3 : 4;
+  const gridCols = vw < 640 ? 2 : vw < 1024 ? 3 : vw < 1400 ? 4 : 5;
 
   // ── Grid layout ────────────────────────────────────────────────────────────
   if (mode === 'grid') {
@@ -568,7 +572,7 @@ export default function Garden({
           padding: `80px 32px 120px`,
           display: "grid",
           gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
-          gap: 14,
+          gap: 10,
           alignContent: "start",
         }}
       >
