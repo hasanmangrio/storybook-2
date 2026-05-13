@@ -49,7 +49,7 @@ function todayShort() {
 
 // ─── DragToCreate ─────────────────────────────────────────────────────────────
 
-function DragToCreate({ onDrop, hidden }) {
+function DragToCreate({ onDrop, hidden, gridMode }) {
   const [dragging, setDragging] = useState(false);
   const [ghost, setGhost] = useState({ x: 0, y: 0 });
   const startRef = useRef(null);
@@ -66,17 +66,21 @@ function DragToCreate({ onDrop, hidden }) {
     window.removeEventListener('mouseup', onUp);
     const dx = e.clientX - startRef.current.x;
     const dy = e.clientY - startRef.current.y;
-    if (Math.hypot(dx, dy) > 14) {
-      onDrop(e.clientX, e.clientY, colorRef.current);
+    if (gridMode || Math.hypot(dx, dy) > 14) {
+      onDrop(
+        gridMode ? window.innerWidth / 2 : e.clientX,
+        gridMode ? window.innerHeight / 2 : e.clientY,
+        colorRef.current,
+      );
       colorRef.current = tints[Math.floor(Math.random() * tints.length)];
     }
-  }, [onDrop, onMove]);
+  }, [onDrop, onMove, gridMode]);
 
   function handleMouseDown(e) {
     e.preventDefault();
     startRef.current = { x: e.clientX, y: e.clientY };
     setGhost({ x: e.clientX, y: e.clientY });
-    setDragging(true);
+    if (!gridMode) setDragging(true);
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
   }
@@ -100,7 +104,7 @@ function DragToCreate({ onDrop, hidden }) {
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
           gap: 7,
-          cursor: dragging ? 'grabbing' : 'grab',
+          cursor: gridMode ? 'pointer' : dragging ? 'grabbing' : 'grab',
           userSelect: 'none',
           zIndex: 25,
           opacity: hidden ? 0 : (dragging ? 0.35 : 1),
@@ -118,7 +122,7 @@ function DragToCreate({ onDrop, hidden }) {
         </span>
       </div>
 
-      {dragging && (
+      {dragging && !gridMode && (
         <div style={{
           position: 'fixed',
           left: ghost.x - 130, top: ghost.y - 90,
@@ -556,28 +560,7 @@ export default function App() {
 
       {justSavedId && <SavedFlourish id={justSavedId} gardenStore={gardenStore} />}
 
-      <DragToCreate onDrop={handleDrop} hidden={overlayActive || mode === 'grid'} />
-
-      {mode === 'grid' && !overlayActive && (
-        <button
-          onClick={() => handleDrop(window.innerWidth / 2, window.innerHeight / 2, 'var(--tint-4)')}
-          style={{
-            position: 'fixed', bottom: 32, right: 32, zIndex: 25,
-            display: 'flex', alignItems: 'center', gap: 7,
-            padding: '9px 18px', borderRadius: 3,
-            background: 'var(--ink)', color: 'var(--paper)',
-            fontFamily: 'var(--sans)', fontSize: 11,
-            letterSpacing: '0.14em', textTransform: 'uppercase',
-            boxShadow: '0 4px 16px -4px rgba(20,30,40,0.28)',
-            cursor: 'pointer',
-          }}
-        >
-          <svg width="11" height="11" viewBox="0 0 11 11" fill="currentColor" aria-hidden>
-            <path d="M5.5 1v9M1 5.5h9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-          </svg>
-          New Entry
-        </button>
-      )}
+      <DragToCreate onDrop={handleDrop} hidden={overlayActive} gridMode={mode === 'grid'} />
 
       {mode === 'deck' && !openId && !draft && (
         <DeckHint
