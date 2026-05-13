@@ -558,6 +558,27 @@ export default function App() {
 
       <DragToCreate onDrop={handleDrop} hidden={overlayActive || mode === 'grid'} />
 
+      {mode === 'grid' && !overlayActive && (
+        <button
+          onClick={() => handleDrop(window.innerWidth / 2, window.innerHeight / 2, 'var(--tint-4)')}
+          style={{
+            position: 'fixed', bottom: 32, right: 32, zIndex: 25,
+            display: 'flex', alignItems: 'center', gap: 7,
+            padding: '9px 18px', borderRadius: 3,
+            background: 'var(--ink)', color: 'var(--paper)',
+            fontFamily: 'var(--sans)', fontSize: 11,
+            letterSpacing: '0.14em', textTransform: 'uppercase',
+            boxShadow: '0 4px 16px -4px rgba(20,30,40,0.28)',
+            cursor: 'pointer',
+          }}
+        >
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="currentColor" aria-hidden>
+            <path d="M5.5 1v9M1 5.5h9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+          </svg>
+          New Entry
+        </button>
+      )}
+
       {mode === 'deck' && !openId && !draft && (
         <DeckHint
           deckFront={deckFront}
