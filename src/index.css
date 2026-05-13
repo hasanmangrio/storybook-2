@@ -9,41 +9,18 @@
   --ink-faint:    oklch(0.538 0.013 228);
   --ink-ghost:    oklch(0.718 0.009 222);
 
-  --accent:       oklch(0.418 0.108 152);   /* deep forest green */
+  --accent:       oklch(0.418 0.108 152);
   --accent-soft:  oklch(0.618 0.072 152);
 
   /* Card tints — muted, cool, editorial */
-  --tint-1: oklch(0.956 0.007 198);   /* cool white */
-  --tint-2: oklch(0.946 0.019 162);   /* pale sage */
-  --tint-3: oklch(0.946 0.012 218);   /* pale slate */
-  --tint-4: oklch(0.941 0.024 152);   /* sage green */
-  --tint-5: oklch(0.946 0.014 248);   /* pale steel blue */
-  --tint-6: oklch(0.942 0.011 202);   /* cool steel */
-  --tint-7: oklch(0.950 0.008 212);   /* blue linen */
-  --tint-8: oklch(0.944 0.016 178);   /* sea mist */
-}
-
-[data-theme="dark"] {
-  --paper:        oklch(0.135 0.010 232);
-  --paper-deep:   oklch(0.108 0.010 232);
-  --paper-edge:   oklch(0.230 0.012 228);
-
-  --ink:          oklch(0.920 0.008 218);
-  --ink-soft:     oklch(0.760 0.010 222);
-  --ink-faint:    oklch(0.560 0.012 226);
-  --ink-ghost:    oklch(0.380 0.010 228);
-
-  --accent:       oklch(0.640 0.120 152);
-  --accent-soft:  oklch(0.480 0.088 152);
-
-  --tint-1: oklch(0.185 0.008 198);
-  --tint-2: oklch(0.188 0.020 162);
-  --tint-3: oklch(0.186 0.013 218);
-  --tint-4: oklch(0.190 0.025 152);
-  --tint-5: oklch(0.186 0.015 248);
-  --tint-6: oklch(0.182 0.011 202);
-  --tint-7: oklch(0.185 0.009 212);
-  --tint-8: oklch(0.187 0.017 178);
+  --tint-1: oklch(0.956 0.007 198);
+  --tint-2: oklch(0.946 0.019 162);
+  --tint-3: oklch(0.946 0.012 218);
+  --tint-4: oklch(0.941 0.024 152);
+  --tint-5: oklch(0.946 0.014 248);
+  --tint-6: oklch(0.942 0.011 202);
+  --tint-7: oklch(0.950 0.008 212);
+  --tint-8: oklch(0.944 0.016 178);
 
   --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
   --sans:  "Geist", ui-sans-serif, system-ui, sans-serif;
@@ -53,6 +30,35 @@
                  0 8px 24px -12px rgba(20, 30, 40, 0.20);
   --shadow-lift: 0 2px 4px rgba(20, 30, 40, 0.09),
                  0 24px 48px -16px rgba(20, 30, 40, 0.30);
+}
+
+[data-theme="dark"] {
+  --paper:        oklch(0.148 0.010 232);
+  --paper-deep:   oklch(0.118 0.010 232);
+  --paper-edge:   oklch(0.260 0.012 228);
+
+  --ink:          oklch(0.920 0.008 218);
+  --ink-soft:     oklch(0.760 0.010 222);
+  --ink-faint:    oklch(0.560 0.012 226);
+  --ink-ghost:    oklch(0.380 0.010 228);
+
+  --accent:       oklch(0.640 0.120 152);
+  --accent-soft:  oklch(0.520 0.088 152);
+
+  /* Dark tints — visibly different from the background, subtly hued */
+  --tint-1: oklch(0.240 0.010 198);
+  --tint-2: oklch(0.246 0.028 162);
+  --tint-3: oklch(0.242 0.018 218);
+  --tint-4: oklch(0.250 0.034 152);
+  --tint-5: oklch(0.242 0.022 248);
+  --tint-6: oklch(0.238 0.015 202);
+  --tint-7: oklch(0.244 0.013 212);
+  --tint-8: oklch(0.248 0.024 178);
+
+  --shadow-rest: 0 1px 3px rgba(0, 0, 0, 0.30),
+                 0 8px 24px -12px rgba(0, 0, 0, 0.50);
+  --shadow-lift: 0 2px 6px rgba(0, 0, 0, 0.36),
+                 0 24px 48px -16px rgba(0, 0, 0, 0.60);
 }
 
 * { box-sizing: border-box; }
