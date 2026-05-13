@@ -108,7 +108,7 @@ const Card = forwardRef(function Card(
           <div style={{
             fontFamily: "var(--serif)", fontWeight: 400,
             fontVariationSettings: "'opsz' 36",
-            fontSize: hasPhoto ? 12 : 15,
+            fontSize: hasPhoto ? 14 : 22,
             lineHeight: 1.2, color: "var(--ink)",
             letterSpacing: "-0.012em", textWrap: "balance", flexShrink: 0,
             overflow: "hidden",
