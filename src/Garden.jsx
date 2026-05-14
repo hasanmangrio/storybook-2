@@ -106,11 +106,10 @@ const Card = forwardRef(function Card(
 
           {/* Title */}
           <div style={{
-            fontFamily: "var(--serif)", fontWeight: 400,
-            fontVariationSettings: "'opsz' 36",
-            fontSize: hasPhoto ? 14 : 22,
-            lineHeight: 1.2, color: "var(--ink)",
-            letterSpacing: "-0.012em", textWrap: "balance", flexShrink: 0,
+            fontFamily: "var(--serif)", fontWeight: 500,
+            fontSize: hasPhoto ? 13 : 16,
+            lineHeight: 1.25, color: "var(--ink)",
+            letterSpacing: "-0.010em", textWrap: "balance", flexShrink: 0,
             overflow: "hidden",
             display: "-webkit-box",
             WebkitLineClamp: 3,
@@ -569,7 +568,7 @@ export default function Garden({
           inset: 0,
           overflowY: "auto",
           zIndex: 3,
-          padding: `80px 32px 120px`,
+          padding: `72px 24px 100px`,
           display: "grid",
           gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
           gap: 10,
